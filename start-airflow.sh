@@ -1,4 +1,17 @@
 #!/bin/bash
+#
+# start-airflow.sh
+# Version: 1.0.0
+# Last Updated: 2025-08-19
+#
+# Description:
+# Starts Apache Airflow in dev mode using Docker + WSL2. Designed for use in both
+# ~/airflow (project) and ~/code/dotfiles (personal tooling backup).
+#
+# Supports:
+#   --slow  : extra wait time for UI to become ready
+#   --debug : shows full logs if startup fails
+
 
 # -----------------------
 # Config & Color Constants
