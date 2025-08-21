@@ -1,4 +1,4 @@
-# Airflow Mini Project
+# Airflow Mini Project 01
 
 This project demonstrates a simple Airflow DAG that downloads stock data and calculates the average closing price.
 
