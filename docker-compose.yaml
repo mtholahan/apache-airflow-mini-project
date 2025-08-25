@@ -13,7 +13,7 @@ x-airflow-common: &airflow-common
     - ./dags:/opt/airflow/dags
     - ./logs:/opt/airflow/logs
     - ./plugins:/opt/airflow/plugins
-    - ./requirements-dev.txt:/requirements.txt
+    - ./requirements-docker.txt:/requirements.txt
   depends_on:
     postgres:
       condition: service_healthy
