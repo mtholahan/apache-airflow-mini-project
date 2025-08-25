@@ -8,7 +8,7 @@ x-airflow-common: &airflow-common
     AIRFLOW__WEBSERVER__SECRET_KEY: something-secret
     AIRFLOW__API__AUTH_BACKENDS: ${AIRFLOW__API__AUTH_BACKENDS:-airflow.api.auth.backend.session}
     _PIP_ADDITIONAL_REQUIREMENTS: ${_PIP_ADDITIONAL_REQUIREMENTS:-}
-  user: "${AIRFLOW_UID:-50000}:${AIRFLOW_GID:-0}"
+  user: "${AIRFLOW_UID}:${AIRFLOW_GID}"
   volumes:
     - ./dags:/opt/airflow/dags
     - ./logs:/opt/airflow/logs
@@ -78,17 +78,7 @@ services:
   airflow-init:
     <<: *airflow-common
     command: >
-      bash -lc "
-      pip install --no-cache-dir -r /requirements.txt &&
-      airflow db migrate &&
-      airflow users create \
-        --username airflow \
-        --password airflow \
-        --firstname Admin \
-        --lastname User \
-        --role Admin \
-        --email markholahan@proton.me
-      "
+      bash -c "pip install --no-cache-dir -r /requirements.txt && airflow db migrate && airflow users create --username airflow --password airflow --firstname Admin --lastname User --role Admin --email markholahan@proton.me"
     depends_on:
       postgres:
         condition: service_healthy
