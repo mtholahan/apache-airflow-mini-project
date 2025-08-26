@@ -118,11 +118,11 @@ fi
 source .venv/bin/activate
 log_success "Virtual environment activated."
 
-if [ -f "requirements-dev.txt" ]; then
-  pip install --quiet -r requirements-dev.txt
-  log "Required Python packages installed from requirements-dev.txt."
+if [ -f "requirements.txt" ]; then
+  pip install --quiet -r requirements.txt
+  log "Required Python packages installed from requirements.txt."
 else
-  log_warn "requirements-dev.txt not found. Skipping pip install."
+  log_warn "requirements.txt not found. Skipping pip install."
 fi
 
 log "You can now run test scripts like: python test_marketvol.py"
