@@ -17,21 +17,24 @@ def download_stock(ticker, **kwargs):
     output_dir = os.path.expanduser(f"~/airflow/data/{date.strftime('%Y-%m-%d')}")
     os.makedirs(output_dir, exist_ok=True)
 
+    print(f"DEBUG: Downloading {ticker} for {date.strftime('%Y-%m-%d')} into {output_dir}")
     df = yf.download(ticker, start=date, end=date + timedelta(days=1))
     if df.empty:
+        print(f"WARNING: No data returned for {ticker} on {date.strftime('%Y-%m-%d')}")
         raise ValueError(f"No data for {ticker} on {date}")
-    df.to_csv(os.path.join(output_dir, f"{ticker}.csv"))
-    print(f"✅ Saved {ticker}.csv")
-    # if ticker == 'AAPL':
-    #     raise ValueError("Simulated download failure")
+
+    output_path = os.path.join(output_dir, f"{ticker}.csv")
+    df.to_csv(output_path)
+    print(f"✅ Saved {ticker}.csv to {output_path}")
 
 def compute_average_close(**kwargs):
     date = get_target_date(kwargs)
     output_dir = os.path.expanduser(f"~/airflow/data/{date.strftime('%Y-%m-%d')}")
 
+    print(f"DEBUG: Reading stock CSVs from {output_dir}")
     aapl = pd.read_csv(os.path.join(output_dir, "AAPL.csv"))
     tsla = pd.read_csv(os.path.join(output_dir, "TSLA.csv"))
-    
+
     aapl['ticker'] = 'AAPL'
     tsla['ticker'] = 'TSLA'
 
@@ -46,7 +49,8 @@ def verify_output(**kwargs):
     date = get_target_date(kwargs)
     output_dir = os.path.expanduser(f"~/airflow/data/{date.strftime('%Y-%m-%d')}")
     expected_files = ["AAPL.csv", "TSLA.csv"]
-    
+
+    print(f"DEBUG: Verifying files in {output_dir}")
     for f in expected_files:
         fpath = os.path.join(output_dir, f)
         if not os.path.exists(fpath):
@@ -66,11 +70,11 @@ with DAG(
     'marketvol',
     default_args=default_args,
     description='Download and process stock data',
-    schedule_interval='15 19 * * 1-5',  # This runs the DAG at 7 PM Monday through Friday
-    start_date=datetime(2025, 8, 23),  # Pick a recent weekday to ensure 2+ runs
-    catchup=True,  # Ensures it runs for all days from start_date until now
-    tags=['example'],
-) as dag:
+    schedule_interval='30 22 * * 1-5',  # This runs the DAG at 20:50 Monday through Friday
+    start_date=datetime(2025, 8, 23),
+    catchup=True,
+    tags=['Airflow Mini Project'],
+    ) as dag:
 
     t1 = PythonOperator(
         task_id='download_aapl',

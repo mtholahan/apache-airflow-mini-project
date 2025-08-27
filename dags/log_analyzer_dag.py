@@ -17,10 +17,13 @@ default_args = {
     'start_date': datetime(2023, 1, 1),
 }
 
-with DAG('log_analyzer',
-         schedule_interval=None,
-         default_args=default_args,
-         catchup=False) as dag:
+with DAG(
+    'log_analyzer',
+    schedule_interval=None,
+    default_args=default_args,
+    catchup=False,
+    tags=['Airflow Mini Project'],
+    ) as dag:
 
     # Analyze AAPL logs only
     t1 = PythonOperator(

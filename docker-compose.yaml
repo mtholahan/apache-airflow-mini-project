@@ -1,91 +1,79 @@
 x-airflow-common: &airflow-common
-  image: ${AIRFLOW_IMAGE_NAME:-apache/airflow:2.10.2}
-  environment: &airflow-env
+  image: apache/airflow:2.10.2
+  environment:
+    &airflow-env
     AIRFLOW__CORE__EXECUTOR: CeleryExecutor
     AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
-    AIRFLOW__CELERY__RESULT_BACKEND: db+postgresql://airflow:airflow@postgres/airflow
-    AIRFLOW__CELERY__BROKER_URL: redis://:@redis:6379/0
-    AIRFLOW__WEBSERVER__SECRET_KEY: something-secret
-    AIRFLOW__API__AUTH_BACKENDS: ${AIRFLOW__API__AUTH_BACKENDS:-airflow.api.auth.backend.session}
-    _PIP_ADDITIONAL_REQUIREMENTS: ${_PIP_ADDITIONAL_REQUIREMENTS:-}
-  user: "${AIRFLOW_UID}:${AIRFLOW_GID}"
+    AIRFLOW__CORE__FERNET_KEY: ''
+    AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'true'
+    AIRFLOW__WEBSERVER__EXPOSE_CONFIG: 'true'
+    AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
+    AIRFLOW__API__AUTH_BACKENDS: 'airflow.api.auth.backend.basic_auth'
+    AIRFLOW__CORE__REQUIREMENTS_FILE: /opt/airflow/requirements.txt
+
   volumes:
     - ./dags:/opt/airflow/dags
     - ./logs:/opt/airflow/logs
     - ./plugins:/opt/airflow/plugins
-    - ./scripts:/opt/airflow/scripts       # ✅ NEW LINE: mounts your host's scripts/
-    - ./requirements-docker.txt:/requirements.txt
-
+    - ./data:/opt/airflow/data
+    - ./scripts:/opt/airflow/scripts
+    - ./requirements.txt:/opt/airflow/requirements.txt
+   
   depends_on:
-    postgres:
-      condition: service_healthy
     redis:
+      condition: service_healthy
+    postgres:
       condition: service_healthy
 
 services:
   postgres:
     image: postgres:13
+    restart: always
     environment:
       POSTGRES_USER: airflow
       POSTGRES_PASSWORD: airflow
       POSTGRES_DB: airflow
+    volumes:
+      - postgres-db-volume:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "airflow"]
       interval: 10s
-      timeout: 5s
-      retries: 5
-    volumes:
-      - postgres-db-volume:/var/lib/postgresql/data
+      retries: 10
+      start_period: 30s
 
   redis:
-    image: redis:7
+    image: redis:latest
+    expose:
+      - 6379
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      interval: 5s
+      timeout: 30s
+      retries: 50
 
   airflow-webserver:
     <<: *airflow-common
-    command: >
-      bash -c "pip install --no-cache-dir -r /requirements.txt && airflow webserver"
     ports:
       - "8080:8080"
-    healthcheck:
-      test: ["CMD", "curl", "--fail", "http://localhost:8080/health"]
-      interval: 10s
-      timeout: 10s
-      retries: 5
+    command: webserver
 
   airflow-scheduler:
     <<: *airflow-common
-    command: >
-      bash -c "pip install --no-cache-dir -r /requirements.txt && airflow scheduler"
-
-  airflow-triggerer:
-    <<: *airflow-common
-    command: >
-      bash -c "pip install --no-cache-dir -r /requirements.txt && airflow triggerer"
-
-  airflow-dag-processor:
-    <<: *airflow-common
-    command: >
-      bash -c "pip install --no-cache-dir -r /requirements.txt && airflow dag-processor"
+    command: scheduler
 
   airflow-worker:
     <<: *airflow-common
-    command: >
-      bash -c "pip install --no-cache-dir -r /requirements.txt && airflow celery worker"
+    command: celery worker
 
-  airflow-init:
+  airflow-triggerer:
     <<: *airflow-common
-    command: >
-      bash -c "pip install --no-cache-dir -r /requirements.txt && airflow db migrate && airflow users create --username airflow --password airflow --firstname Admin --lastname User --role Admin --email markholahan@proton.me"
-    depends_on:
-      postgres:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
+    command: triggerer
+
+  airflow-flower:
+    <<: *airflow-common
+    command: celery flower
+    ports:
+      - "5555:5555"
 
 volumes:
   postgres-db-volume:
