@@ -1,4 +1,4 @@
-# Airflow Mini Project 01
+# Airflow Mini Projects
 
 This project demonstrates a simple Airflow DAG that downloads stock data and calculates the average closing price.
 
@@ -27,4 +27,5 @@ Average Close prices:
 ## 🖥️ Screenshots
 - [DAG List View](./screenshots/dags_view.png)
 - [Task Log Output](./screenshots/task_logs_compute_avg_close.png)
+
 ```
