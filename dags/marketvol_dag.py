@@ -12,9 +12,10 @@ def get_target_date(context):
     else:
         return datetime.today() - timedelta(days=1)
 
+
 def download_stock(ticker, **kwargs):
     date = get_target_date(kwargs)
-    output_dir = os.path.expanduser(f"~/airflow/data/{date.strftime('%Y-%m-%d')}")
+    output_dir = f"/opt/airflow/data/{date.strftime('%Y-%m-%d')}"
     os.makedirs(output_dir, exist_ok=True)
 
     print(f"DEBUG: Downloading {ticker} for {date.strftime('%Y-%m-%d')} into {output_dir}")
@@ -26,6 +27,7 @@ def download_stock(ticker, **kwargs):
     output_path = os.path.join(output_dir, f"{ticker}.csv")
     df.to_csv(output_path)
     print(f"✅ Saved {ticker}.csv to {output_path}")
+
 
 def compute_average_close(**kwargs):
     date = get_target_date(kwargs)
@@ -70,7 +72,7 @@ with DAG(
     'marketvol',
     default_args=default_args,
     description='Download and process stock data',
-    schedule_interval='21 23 * * 1-5',  # This runs the DAG at 20:50 Monday through Friday
+    schedule_interval='43 16 * * 1-5',  # This runs the DAG at XX:XX Monday through Friday
     start_date=datetime(2025, 8, 23),
     catchup=True,
     tags=['Airflow Mini Project'],
