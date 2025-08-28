@@ -23,19 +23,10 @@ The `marketvol` DAG:
 ## ✅ Sample Output
 From task logs (`compute_avg_close`):
 
-Average Close prices:
- ticker
- AAPL    230.889999
- TSLA    335.160004
-
-```
-## 🖥️ Screenshots
-- [DAG List View](./screenshots/dags_view.png)
-- [Task Log Output](./screenshots/task_logs_compute_avg_close.png)
-
-```
-
-
+| Ticker | Average Close Price |
+| ------ | ------------------: |
+| AAPL   |          230.889999 |
+| TSLA   |          335.160004 |
 
 The`log_analyzer_dag.py`DAG:
 
