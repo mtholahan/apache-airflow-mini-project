@@ -14,7 +14,7 @@ from log_analyzer import analyze_file
 
 default_args = {
     'owner': 'airflow',
-    'start_date': datetime(2023, 1, 1),
+    'start_date': datetime(2025, 8, 27),
 }
 
 with DAG(

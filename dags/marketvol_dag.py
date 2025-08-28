@@ -31,7 +31,7 @@ def download_stock(ticker, **kwargs):
 
 def compute_average_close(**kwargs):
     date = get_target_date(kwargs)
-    output_dir = os.path.expanduser(f"~/airflow/data/{date.strftime('%Y-%m-%d')}")
+    output_dir = f"/opt/airflow/data/{date.strftime('%Y-%m-%d')}"
 
     print(f"DEBUG: Reading stock CSVs from {output_dir}")
     aapl = pd.read_csv(os.path.join(output_dir, "AAPL.csv"))
@@ -49,7 +49,8 @@ def compute_average_close(**kwargs):
 
 def verify_output(**kwargs):
     date = get_target_date(kwargs)
-    output_dir = os.path.expanduser(f"~/airflow/data/{date.strftime('%Y-%m-%d')}")
+    output_dir = f"/opt/airflow/data/{date.strftime('%Y-%m-%d')}"
+
     expected_files = ["AAPL.csv", "TSLA.csv"]
 
     print(f"DEBUG: Verifying files in {output_dir}")
@@ -65,16 +66,16 @@ default_args = {
     'owner': 'airflow',
     'retries': 1,
     'retry_delay': timedelta(minutes=1),
-    'start_date': datetime(2023, 1, 1)
+    'start_date': datetime(2023, 8, 27)
 }   
 
 with DAG(
     'marketvol',
     default_args=default_args,
     description='Download and process stock data',
-    schedule_interval='43 16 * * 1-5',  # This runs the DAG at XX:XX Monday through Friday
-    start_date=datetime(2025, 8, 23),
-    catchup=True,
+    schedule_interval='39 19 * * 1-5',  # This runs the DAG at XX:XX Monday through Friday
+    start_date=datetime(2025, 8, 27),
+    catchup=False,
     tags=['Airflow Mini Project'],
     ) as dag:
 
