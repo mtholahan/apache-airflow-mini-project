@@ -1,0 +1,26 @@
+# Byte-compiled / cache files
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Airflow logs and data
+logs/
+data/
+
+# Python virtual environments
+.venv/
+env/
+ENV/
+venv/
+
+# OS / Editor noise
+.DS_Store
+*.swp
+*.bak
+
+# Ignore shell history or secrets if present
+*.env
+secrets.env
+
+# Ignore screenshots if not meant for versioning
+screenshots/

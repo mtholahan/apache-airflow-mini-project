@@ -70,7 +70,7 @@ with DAG(
     'marketvol',
     default_args=default_args,
     description='Download and process stock data',
-    schedule_interval='30 22 * * 1-5',  # This runs the DAG at 20:50 Monday through Friday
+    schedule_interval='21 23 * * 1-5',  # This runs the DAG at 20:50 Monday through Friday
     start_date=datetime(2025, 8, 23),
     catchup=True,
     tags=['Airflow Mini Project'],

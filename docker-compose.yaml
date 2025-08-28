@@ -1,7 +1,9 @@
 x-airflow-common: &airflow-common
-  image: apache/airflow:2.10.2
+  image: custom-airflow:2.10.2
+  build:
+    context: .
+    dockerfile: Dockerfile.dev
   environment:
-    &airflow-env
     AIRFLOW__CORE__EXECUTOR: CeleryExecutor
     AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
     AIRFLOW__CORE__FERNET_KEY: ''
@@ -9,20 +11,16 @@ x-airflow-common: &airflow-common
     AIRFLOW__WEBSERVER__EXPOSE_CONFIG: 'true'
     AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
     AIRFLOW__API__AUTH_BACKENDS: 'airflow.api.auth.backend.basic_auth'
-    AIRFLOW__CORE__REQUIREMENTS_FILE: /opt/airflow/requirements.txt
-
   volumes:
     - ./dags:/opt/airflow/dags
-    - ./logs:/opt/airflow/logs
     - ./plugins:/opt/airflow/plugins
     - ./data:/opt/airflow/data
     - ./scripts:/opt/airflow/scripts
-    - ./requirements.txt:/opt/airflow/requirements.txt
-   
+    - ./logs:/opt/airflow/logs  # Fixed permission issue
   depends_on:
-    redis:
-      condition: service_healthy
     postgres:
+      condition: service_healthy
+    redis:
       condition: service_healthy
 
 services:
@@ -51,29 +49,51 @@ services:
       timeout: 30s
       retries: 50
 
+  airflow-init:
+    <<: *airflow-common
+    entrypoint: >
+      bash -c "airflow db init && \
+               airflow users create --username admin --firstname Mark --lastname Holahan --role Admin --email markholahan@pm.me --password admin"
+    restart: "no"
+
   airflow-webserver:
     <<: *airflow-common
+    depends_on:
+      airflow-init:
+        condition: service_completed_successfully
     ports:
       - "8080:8080"
     command: webserver
 
   airflow-scheduler:
     <<: *airflow-common
+    depends_on:
+      airflow-init:
+        condition: service_completed_successfully
     command: scheduler
 
   airflow-worker:
     <<: *airflow-common
+    depends_on:
+      airflow-init:
+        condition: service_completed_successfully
     command: celery worker
 
   airflow-triggerer:
     <<: *airflow-common
+    depends_on:
+      airflow-init:
+        condition: service_completed_successfully
     command: triggerer
 
   airflow-flower:
     <<: *airflow-common
-    command: celery flower
+    depends_on:
+      airflow-init:
+        condition: service_completed_successfully
     ports:
       - "5555:5555"
+    command: celery flower
 
 volumes:
   postgres-db-volume:

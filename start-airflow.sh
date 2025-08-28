@@ -1,8 +1,8 @@
 #!/bin/bash
 #
 # start-airflow.sh
-# Version: 1.1.2
-# Last Updated: 2025-08-24
+# Version: 1.1.4
+# Last Updated: 2025-08-28
 #
 # Description:
 # Starts Apache Airflow in dev mode using Docker + WSL2.
@@ -37,11 +37,13 @@ log_error()   { echo -e "${RED}✖ $1${NC}"; }
 
 SLOW_MODE=false
 DEBUG_MODE=false
+RESET_DB=false
 
 for arg in "$@"; do
   case $arg in
     --slow)  SLOW_MODE=true;  log_warn "Slow mode enabled — longer wait for Airflow UI." ;;
     --debug) DEBUG_MODE=true; log_warn "Debug mode enabled — full logs will be shown on failure." ;;
+    --reset) RESET_DB=true;  log_warn "Airflow DB reset requested." ;;
   esac
 done
 
@@ -50,7 +52,7 @@ done
 # -----------------------
 
 print_error_log() {
-  echo -e "\n🪵 ${YELLOW}Showing Airflow webserver logs:${NC}"
+  echo -e "\n🪍 ${YELLOW}Showing Airflow webserver logs:${NC}"
   if $DEBUG_MODE; then
     docker logs "$AIRFLOW_CONTAINER" 2>&1 | tail -n 50
   else
@@ -133,6 +135,19 @@ set -e
 # Docker + Airflow Setup
 # -----------------------
 
+# Docker accessibility check
+if ! docker info >/dev/null 2>&1; then
+  log_error "Docker is not reachable from WSL. Try running: wsl --shutdown (from PowerShell) then restart your terminal."
+  exit 1
+fi
+
+log "Rebuilding Docker images with no cache …"
+docker-compose -f "$DOCKER_COMPOSE_FILE" down -v --remove-orphans
+docker-compose -f "$DOCKER_COMPOSE_FILE" build --no-cache || {
+  log_error "Docker build failed. Exiting."
+  exit 1
+}
+
 log "Starting Docker containers …"
 docker-compose -f "$DOCKER_COMPOSE_FILE" up -d || {
   log_error "Failed to start Docker containers. Exiting."
@@ -142,7 +157,14 @@ docker-compose -f "$DOCKER_COMPOSE_FILE" up -d || {
 log "Waiting for services to start …"
 sleep 15
 
-# wait_for_container_exit "$INIT_CONTAINER" -- seeing if skipping this works.
+if $RESET_DB; then
+  log_warn "Resetting Airflow DB …"
+  docker exec "$INIT_CONTAINER" bash -c "airflow db reset -y" || {
+    log_error "Failed to reset Airflow DB."
+    exit 1
+  }
+  log_success "Airflow DB reset complete."
+fi
 
 log "Checking if Airflow DB is initialized …"
 db_status=$(docker exec "$INIT_CONTAINER" bash -c "airflow db check" 2>&1 || true)
