@@ -2,10 +2,10 @@
 
 
 ## 📖 Abstract
-This project demonstrates end-to-end orchestration and monitoring of a data engineering workflow using Apache Airflow. The pipeline ingests high-frequency stock market data (AAPL and TSLA) from Yahoo Finance, schedules retrieval at daily market close, and processes it through a directed acyclic graph (DAG). Tasks include parallelized extraction, CSV persistence, HDFS loading, and downstream query execution, with dependency management enforced by Airflow’s scheduling engine.
-
-To extend operational reliability, I built a companion log analyzer in Python that parses Airflow scheduler logs to track failures, warnings, and task execution status. Using Python’s pathlib and text-processing capabilities, the analyzer aggregates error counts and extracts detailed messages across multiple log files, enabling proactive debugging and monitoring of pipeline health.
-
+This project demonstrates end-to-end orchestration and monitoring of a data engineering workflow using Apache Airflow. The pipeline ingests high-frequency stock market data (AAPL and TSLA) from Yahoo Finance, schedules retrieval at daily market close, and processes it through a directed acyclic graph (DAG). Tasks include parallelized extraction, CSV persistence, HDFS loading, and downstream query execution, with dependency management enforced by Airflow’s scheduling engine.
+
+To extend operational reliability, I built a companion log analyzer in Python that parses Airflow scheduler logs to track failures, warnings, and task execution status. Using Python’s pathlib and text-processing capabilities, the analyzer aggregates error counts and extracts detailed messages across multiple log files, enabling proactive debugging and monitoring of pipeline health.
+
 Through this project, I gained hands-on experience in Airflow DAG creation, operator selection (BashOperator, PythonOperator), CeleryExecutor parallelism, and log-driven monitoring. The exercise highlights how modern data engineering teams manage both orchestration and observability in production-grade workflows.
 
 
@@ -118,4 +118,4 @@ Screenshot of parsed log results
 
 
 
-*Generated automatically via Python + Jinja2 + SQL Server table `tblMiniProjectProgress` on 09-15-2025 00:57:51*
+*Generated automatically via Python + Jinja2 + SQL Server table `tblMiniProjectProgress` on 09-15-2025 18:03:53*
