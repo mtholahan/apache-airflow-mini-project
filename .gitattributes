@@ -1,0 +1,11 @@
+# Standardize line endings across platforms
+* text=auto
+
+# Treat PDFs and other binary files correctly
+*.pdf binary
+
+# Improve Git merge/diff for Jupyter Notebooks
+*.ipynb merge=union
+
+# Optional SQL diff configuration
+*.sql diff=sql
