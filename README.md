@@ -6,7 +6,9 @@ This project demonstrates end-to-end orchestration and monitoring of a data engi
 
 To extend operational reliability, I built a companion log analyzer in Python that parses Airflow scheduler logs to track failures, warnings, and task execution status. Using Python’s pathlib and text-processing capabilities, the analyzer aggregates error counts and extracts detailed messages across multiple log files, enabling proactive debugging and monitoring of pipeline health.
 
-Through this project, I gained hands-on experience in Airflow DAG creation, operator selection (BashOperator, PythonOperator), CeleryExecutor parallelism, and log-driven monitoring. The exercise highlights how modern data engineering teams manage both orchestration and observability in production-grade workflows.
+Through this project, I gained hands-on experience in Airflow DAG creation, operator selection (BashOperator, PythonOperator), CeleryExecutor parallelism, and log-driven monitoring. The exercise highlights how modern data engineering teams manage both orchestration and observability in production-grade workflows.
+
+I spent considerable with, with ChatGPT, to create the "start-airflow.sh" shell script (a startup script for launching Apache Airflow in Docker with WSL2, handling init, user setup, and race-condition-safe service restarts. Includes debug and reset modes).
 
 
 
@@ -72,27 +74,17 @@ Schema includes: date_time, open, high, low, close, adj_close, volume.
 
 ## 📸 Evidence
 
-![airflow_ui.png](./evidence/airflow_ui.png)  
-Screenshot of Airflow DAGs view showing pipelines loaded
-
-![dag_run.png](./evidence/dag_run.png)  
-Screenshot of DAG run completion
-
-![log_parser_output.png](./evidence/log_parser_output.png)  
-Screenshot of parsed log results
+![airflow_execution_log.png](./evidence/airflow_execution_log.png)  
+Screenshot of Airflow Execution of marketvol DAG, last step
 
 
 
 
 ## 📎 Deliverables
 
-- [`- docker-compose.yaml and requirements.txt`](./deliverables/- docker-compose.yaml and requirements.txt)
+- [`- marketvol_day.py`](./deliverables/- marketvol_day.py)
 
-- [`- Python DAG scripts (dags/ folder)`](./deliverables/- Python DAG scripts (dags/ folder))
-
-- [`- Log analyzer script (log_parser.py)`](./deliverables/- Log analyzer script (log_parser.py))
-
-- [`- Raw container logs in /deliverables/logs/`](./deliverables/- Raw container logs in /deliverables/logs/)
+- [`- log_analyzer_dag.py`](./deliverables/- log_analyzer_dag.py)
 
 - [`- README with project description and setup`](./deliverables/- README with project description and setup)
 
@@ -117,5 +109,4 @@ Screenshot of parsed log results
 - Optionally drop DAG definition from Airflow once complete
 
 
-
-*Generated automatically via Python + Jinja2 + SQL Server table `tblMiniProjectProgress` on 09-15-2025 19:26:51*
+*Generated automatically via Python + Jinja2 + SQL Server table `tblMiniProjectProgress` on 09-16-2025 13:01:30*
