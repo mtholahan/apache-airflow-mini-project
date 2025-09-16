@@ -82,9 +82,11 @@ Screenshot of Airflow Execution of marketvol DAG, last step
 
 ## 📎 Deliverables
 
-- [`- marketvol_day.py`](./deliverables/- marketvol_day.py)
+- [`- marketvol_dag.py`](./deliverables/- marketvol_dag.py)
 
 - [`- log_analyzer_dag.py`](./deliverables/- log_analyzer_dag.py)
+
+- [`- start-airflow.sh`](./deliverables/- start-airflow.sh)
 
 - [`- README with project description and setup`](./deliverables/- README with project description and setup)
 
@@ -109,4 +111,4 @@ Screenshot of Airflow Execution of marketvol DAG, last step
 - Optionally drop DAG definition from Airflow once complete
 
 
-*Generated automatically via Python + Jinja2 + SQL Server table `tblMiniProjectProgress` on 09-16-2025 13:04:17*
+*Generated automatically via Python + Jinja2 + SQL Server table `tblMiniProjectProgress` on 09-16-2025 13:04:43*
