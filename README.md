@@ -75,7 +75,7 @@ Schema includes: date_time, open, high, low, close, adj_close, volume.
 ## 📸 Evidence
 
 ![airflow_execution_log.png](./evidence/airflow_execution_log.png)  
-Screenshot of Airflow Execution of marketvol DAG, last step
+Screenshot of Airflow Execution of marketvol DAG, last task
 
 
 
@@ -111,4 +111,4 @@ Screenshot of Airflow Execution of marketvol DAG, last step
 - Optionally drop DAG definition from Airflow once complete
 
 
-*Generated automatically via Python + Jinja2 + SQL Server table `tblMiniProjectProgress` on 09-16-2025 13:06:09*
+*Generated automatically via Python + Jinja2 + SQL Server table `tblMiniProjectProgress` on 09-16-2025 13:13:05*
