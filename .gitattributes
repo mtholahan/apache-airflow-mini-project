@@ -1,5 +1,9 @@
 # Standardize line endings across platforms
 * text=auto
+*.sh text eol=lf
+*.yaml text eol=lf
+*.txt text eol=lf
+
 
 # Treat PDFs and other binary files correctly
 *.pdf binary
