@@ -1,0 +1,12 @@
+# syntax=docker/dockerfile:1.4
+
+FROM apache/airflow:2.9.0-python3.12
+
+# Switch to airflow user for installing requirements
+USER airflow
+
+COPY requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Restore correct runtime user context
+USER airflow

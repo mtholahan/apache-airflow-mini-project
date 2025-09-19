@@ -1,5 +1,5 @@
 x-airflow-common: &airflow-common
-  image: custom-airflow:2.10.2
+  image: apache/airflow:2.9.0-python3.12
   build:
     context: .
     dockerfile: Dockerfile.dev
@@ -7,16 +7,18 @@ x-airflow-common: &airflow-common
     AIRFLOW__CORE__EXECUTOR: CeleryExecutor
     AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
     AIRFLOW__CORE__FERNET_KEY: ''
-    AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'true'
+    AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'false'
     AIRFLOW__WEBSERVER__EXPOSE_CONFIG: 'true'
     AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
     AIRFLOW__API__AUTH_BACKENDS: 'airflow.api.auth.backend.basic_auth'
+    AIRFLOW__CORE__STORE_SERIALIZED_DAGS: 'true'
+    AIRFLOW__WEBSERVER__PARSE_DAGS_IN_WEBSERVER: 'false'
   volumes:
     - ./dags:/opt/airflow/dags
     - ./plugins:/opt/airflow/plugins
     - ./data:/opt/airflow/data
     - ./scripts:/opt/airflow/scripts
-    - ./logs:/opt/airflow/logs  # Fixed permission issue
+    - ./logs:/opt/airflow/logs
   depends_on:
     postgres:
       condition: service_healthy

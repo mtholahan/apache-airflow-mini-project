@@ -1,8 +1,8 @@
 #!/bin/bash
 #
 # start-airflow.sh
-# Version: 1.1.4
-# Last Updated: 2025-08-28
+# Version: 1.1.6
+# Last Updated: 2025-Sep-18
 #
 # Description:
 # Starts Apache Airflow in dev mode using Docker + WSL2.
