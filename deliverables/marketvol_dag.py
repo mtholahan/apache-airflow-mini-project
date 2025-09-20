@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 import os
 import yfinance as yf
 import pandas as pd
+import pytz
 
 def get_target_date(context):
     date_str = context["dag_run"].conf.get("date") if context.get("dag_run") else None
@@ -12,8 +13,16 @@ def get_target_date(context):
     else:
         return datetime.today() - timedelta(days=1)
 
-
 def download_stock(ticker, **kwargs):
+    # Ensure we’re running after market close (EST)
+    now_utc = datetime.utcnow().replace(tzinfo=pytz.UTC)
+    now_est = now_utc.astimezone(pytz.timezone("US/Eastern"))
+
+    if now_est.hour < 18:  # 6 PM EST
+        raise RuntimeError(
+            f"⛔ It's too early to pull final stock data. Try again after 6 PM EST. (Current EST: {now_est.strftime('%Y-%m-%d %H:%M:%S')})"
+        )
+
     date = get_target_date(kwargs)
     output_dir = f"/opt/airflow/data/{date.strftime('%Y-%m-%d')}"
     os.makedirs(output_dir, exist_ok=True)
@@ -27,7 +36,6 @@ def download_stock(ticker, **kwargs):
     output_path = os.path.join(output_dir, f"{ticker}.csv")
     df.to_csv(output_path)
     print(f"✅ Saved {ticker}.csv to {output_path}")
-
 
 def compute_average_close(**kwargs):
     date = get_target_date(kwargs)
@@ -73,7 +81,7 @@ with DAG(
     'marketvol',
     default_args=default_args,
     description='Download and process stock data',
-    schedule_interval='39 19 * * 1-5',  # This runs the DAG at XX:XX Monday through Friday
+    schedule_interval='30 22 * * 1-5',  # This runs the DAG at XX:XX Monday through Friday
     start_date=datetime(2025, 8, 27),
     catchup=False,
     tags=['Airflow Mini Project'],

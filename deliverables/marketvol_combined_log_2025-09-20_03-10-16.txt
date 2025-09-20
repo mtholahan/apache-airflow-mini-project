@@ -1,0 +1,12 @@
+
+
+⚠️ No log found for task: download_aapl
+
+
+⚠️ No log found for task: download_tsla
+
+
+⚠️ No log found for task: compute_avg_close
+
+
+⚠️ No log found for task: verify_output_files
