@@ -1,8 +1,12 @@
-# Do not forget: run `docker-compose build --no-cache` after editing this file
+# Core Airflow setup
+apache-airflow==2.10.2
+apache-airflow-providers-http==4.13.0
+apache-airflow-providers-sqlite==3.9.0
+apache-airflow-providers-openlineage>=1.8.0,<2.0.0
 
-yfinance
-pandas
-requests
-apache-airflow-providers-postgres
-apache-airflow-providers-redis
-apache-airflow-providers-http
+# Data processing & finance
+pandas==2.3.1
+yfinance==0.2.65
+
+# Timezone handling
+pytz==2024.1

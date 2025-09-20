@@ -1,3 +1,5 @@
+# dags/log_analyzer_dag.py
+
 # type: ignore
 import sys
 import os
@@ -23,21 +25,21 @@ with DAG(
     default_args=default_args,
     catchup=False,
     tags=['Airflow Mini Project'],
-    ) as dag:
+) as dag:
 
-    # Analyze AAPL logs only
+    # 🔍 t1: Analyze AAPL logs
     t1 = PythonOperator(
         task_id='analyze_download_aapl_logs',
         python_callable=analyze_file,
-        op_args=['/opt/airflow/logs/dag_id=marketvol', 'download_aapl'],
+        op_args=['/opt/airflow/logs/combined', 'download_aapl'],
         dag=dag
     )
 
-    # Analyze TSLA logs only
+    # 🔍 t2: Analyze TSLA logs
     t2 = PythonOperator(
         task_id='analyze_download_tsla_logs',
         python_callable=analyze_file,
-        op_args=['/opt/airflow/logs/dag_id=marketvol', 'download_tsla'],
+        op_args=['/opt/airflow/logs/combined', 'download_tsla'],
         dag=dag
     )
 

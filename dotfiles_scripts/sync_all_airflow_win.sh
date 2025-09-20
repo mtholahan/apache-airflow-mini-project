@@ -40,26 +40,25 @@ echo "[✓] Dotfiles sync complete."
 # === 2️⃣ Sync into Windows project repo ===
 echo "[*] Syncing to Windows mini-project repo..."
 
-mkdir -p "$MINIPROJECT_DIR"/{dags,scripts,logs}
+mkdir -p "$MINIPROJECT_DIR"/{dags,scripts,dotfiles_scripts,logs,data}
 
+# Core files
 cp "$AIRFLOW_DIR/start-airflow.sh" "$MINIPROJECT_DIR/"
 cp "$AIRFLOW_DIR/requirements.txt" "$MINIPROJECT_DIR/"
 cp "$AIRFLOW_DIR/docker-compose.yaml" "$MINIPROJECT_DIR/"
 cp "$AIRFLOW_DIR/Dockerfile.dev" "$MINIPROJECT_DIR/"
 
+# DAGs and scripts
 rsync -av --delete "$AIRFLOW_DIR/dags/" "$MINIPROJECT_DIR/dags/"
+rsync -av --delete "$AIRFLOW_DIR/scripts/" "$MINIPROJECT_DIR/scripts/"
+rsync -av --delete "$DOTFILES_SCRIPTS_DIR/" "$MINIPROJECT_DIR/dotfiles_scripts/"
 
-rsync -av --delete \
-  --exclude '__pycache__' \
-  "$DOTFILES_SCRIPTS_DIR/" "$MINIPROJECT_DIR/scripts/"
+# Combined logs (copy all files into logs/)
+echo "[*] Copying combined log reports..."
+rsync -av "$AIRFLOW_DIR/logs/combined/" "$MINIPROJECT_DIR/logs/"
 
-# ✅ Copy latest combined log into logs/ (if found)
-COMBINED_LOG=$(find "$AIRFLOW_DIR" -maxdepth 1 -name "marketvol_combined_log_*.txt" | sort | tail -n 1)
-if [[ -n "$COMBINED_LOG" ]]; then
-    echo "[*] Found latest combined log: $COMBINED_LOG"
-    cp "$COMBINED_LOG" "$MINIPROJECT_DIR/logs/"
-else
-    echo "[!] No combined log file found. Skipping..."
-fi
+# Data directory
+echo "[*] Copying data directory..."
+rsync -av "$AIRFLOW_DIR/data/" "$MINIPROJECT_DIR/data/"
 
 echo "[✓] Windows sync complete."

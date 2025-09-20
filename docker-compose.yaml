@@ -1,5 +1,5 @@
 x-airflow-common: &airflow-common
-  image: apache/airflow:2.9.0-python3.12
+  image: apache/airflow-local:dev
   build:
     context: .
     dockerfile: Dockerfile.dev
@@ -26,6 +26,7 @@ x-airflow-common: &airflow-common
       condition: service_healthy
 
 services:
+
   postgres:
     image: postgres:13
     restart: always
@@ -60,6 +61,7 @@ services:
 
   airflow-webserver:
     <<: *airflow-common
+    image: apache/airflow-webserver:dev
     depends_on:
       airflow-init:
         condition: service_completed_successfully
@@ -69,6 +71,7 @@ services:
 
   airflow-scheduler:
     <<: *airflow-common
+    image: apache/airflow-scheduler:dev
     depends_on:
       airflow-init:
         condition: service_completed_successfully
@@ -76,6 +79,7 @@ services:
 
   airflow-worker:
     <<: *airflow-common
+    image: apache/airflow-worker:dev
     depends_on:
       airflow-init:
         condition: service_completed_successfully
@@ -83,6 +87,7 @@ services:
 
   airflow-triggerer:
     <<: *airflow-common
+    image: apache/airflow-triggerer:dev
     depends_on:
       airflow-init:
         condition: service_completed_successfully
@@ -90,6 +95,7 @@ services:
 
   airflow-flower:
     <<: *airflow-common
+    image: apache/airflow-flower:dev
     depends_on:
       airflow-init:
         condition: service_completed_successfully
