@@ -102,7 +102,7 @@ Screenshot of Airflow UI
 
 - [`report_download_aapl_2025-09-20_03-46-26.txt`](./deliverables/report_download_aapl_2025-09-20_03-46-26.txt)
 
-- [`report_download_tsla_2025-09-20_03-46-29`](./deliverables/report_download_tsla_2025-09-20_03-46-29)
+- [`report_download_tsla_2025-09-20_03-46-29.txt`](./deliverables/report_download_tsla_2025-09-20_03-46-29.txt)
 
 - [`start-airflow.sh`](./deliverables/start-airflow.sh)
 
@@ -130,4 +130,4 @@ Screenshot of Airflow UI
 	- Optionally drop DAG definition from Airflow once complete
 
 
-*Generated automatically via Python + Jinja2 + SQL Server table `tblMiniProjectProgress` on 09-20-2025 01:23:49*
+*Generated automatically via Python + Jinja2 + SQL Server table `tblMiniProjectProgress` on 09-20-2025 01:29:36*
