@@ -95,7 +95,7 @@ Screenshot of Airflow UI
 
 - [`marketvol_combined_log_2025-09-19_00-12-58.txt`](./deliverables/marketvol_combined_log_2025-09-19_00-12-58.txt)
 
-- [`marketvol_combined_log_2025-09-20_03-10-16.txt`](./deliverables/marketvol_combined_log_2025-09-20_03-10-16.txt)
+- [`marketvol_combined_log_2025-09-20_21-07-52.txt`](./deliverables/marketvol_combined_log_2025-09-20_21-07-52.txt)
 
 - [`report_download_aapl_2025-09-20_03-46-26.txt`](./deliverables/report_download_aapl_2025-09-20_03-46-26.txt)
 
@@ -127,4 +127,4 @@ Screenshot of Airflow UI
 - Optionally drop DAG definition from Airflow once complete
 
 
-*Generated automatically via Python + Jinja2 + SQL Server table `tblMiniProjectProgress` on 09-20-2025 15:58:46*
+*Generated automatically via Python + Jinja2 + SQL Server table `tblMiniProjectProgress` on 09-20-2025 21:24:28*
